@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+    <!-------------------------------------------------BOOTSTRAP CDN ------------------------------------------------>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<!-- ----------------------------------------------------ICON ----------------------------------------------------->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- ----------------------------------------------------SCRIPT LINK----------------------------------------------------->
+
+<script src="./firebase.js" type="module"></script>
+
+
+</head>
+<body>
+
+    <!-------------------------------------------------------CSS STYLE  ------------------------------------------------>
+    <style>
+        .container{
+            border-radius: 24px;
+            border: 2px solid black;
+        }
+        .btn{
+            background-color: rgb(91, 154, 247);
+            width: 100px;
+            padding: 10px;
+            margin-top: 10px;
+            margin-left: 15px;
+        }
+        .btn-edit ion-icon,
+        .btn-delete ion-icon{
+                 pointer-events: none;
+                }
+                input{
+                    background-color:rgb(250, 250, 250);
+                    border-radius: 5px;
+                    border: none;
+                    width: 250px;
+                    padding: 8px;
+                    }
+                    .Add{
+                        background-color: antiquewhite;
+                        padding: 4px;
+                        width: 75px;
+                    }
+    </style>
+
+
+<!-------------------------------------------------------TABLE LIST --------------------------------------------->
+
+    <h1 class="text-center">Resume Builder</h1>
+    <div class="container bg-primary-subtle p-5">
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                <input type="hidden" id="id">
+                <div class="row m-2">
+                    <div class="col-3">
+                        <h6><label for="inputPassword" class="col-form-label">Full Name</label></h6>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="fullname" onkeyup="add(this,'fullname',null)"
+                            placeholder="Enter your name">
+                    </div>
+                </div>
+
+                <!--------------------------------------------EMAIL ----------------------------------------->
+
+                <div class="row m-2">
+                    <div class="col-3">
+                        <h6><label for="inputPassword" class="col-form-label">Email</label></h6>
+                    </div>
+                    <div class="col-8">
+                        <input type="email" class="form-control" onkeyup="add(this,'email',null)" id="email"
+                            placeholder="Enter your email">
+                    </div>
+                </div>
+
+                <!--------------------------------------------- Objective----------------------------------------------->
+
+                <div class="row m-2">
+                    <div class="col-3">
+                        <h6 class="mt-4"><label for="inputPassword" class="col-form-label">Objective</label></h6>
+                    </div>
+                    <div class="col-8 mt-4">
+                        <textarea class="form-control" id="Objective" rows="3" onkeyup="add(this,'Objective',null)"
+                            placeholder="Enter your Objective"></textarea>
+                    </div>
+                </div>
+              
+              <!------------------------------------------ Language known -------------------------------------->
+               
+               
+                <div class="row m-2 mt-3">
+                    <h6 class="mt-2 mb-4">Language_known</h6>
+                    <div class="col-lg-7 col-sm-12 mb-2">
+                        <input type="text" id="Language_known" class="form-control" placeholder="Enter Language_known">
+                    </div>
+                    <div class="col-lg-2 col-sm-2">
+                        <button class="Add" onclick="addArrayValue('Language_known')">Add</button>
+                    </div>
+                    <ul id="list_1">
+                
+                    </ul>
+
+                </div>
+
+                <!------------------------------------------------ SKILLS------------------------------------------------>
+
+                <div class="row m-2 mt-3">
+                    <h6 class="mt-2 mb-3">Skills</h6>
+                    <div class="col-lg-7 col-sm-12 mb-2">
+                        <input type="text" id="skills" class="form-control" placeholder="Enter Skills">
+                    </div>
+                    <div class="col-lg-2 col-sm-2">
+                        <button class="Add" onclick="addArrayValue('skills')">Add</button>
+                    </div>
+                    <ul id="list_2">
+                
+                    </ul>
+                </div>
+
+            <!------------------------------------------------- HOBBIES ----------------------------------------------->
+
+            <div class="row m-3">
+                <h6 class="mb-4">Hobbies</h6>
+                    <div class="col-lg-7 col-sm-12 mb-2">
+                            <input type="text" id="hobbies" class="form-control" placeholder="Enter Hobbies">
+                    </div>
+                    <div class="col-lg-2 col-sm-2">
+                        <button class="Add" onclick="addArrayValue('hobbies')">Add</button>
+                </div>
+                <ul id="list_3"></ul>
+        </div> 
+            
+                <!-- -----------------------------------------------PROJECTS ------------------------------------------->
+                
+                
+                <div class="row m-2 mt-3">
+                    <h6 class="mb-4">Projects</h6>
+                    <div class="col-3 ms-2 text-body-secondary">
+                        <label for="inputPassword" class="col-form-label">Name</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="project_name" placeholder="Enter project name">
+                    </div>
+                    <div class="col-3 ms-2 mt-2 text-body-secondary">
+                        <label for="inputPassword" class="col-form-label">Company</label>
+                    </div>
+                    <div class="col-8 mt-2">
+                        <input type="text" class="form-control" id="company_name" placeholder="Enter company name">
+                    </div>
+                    <div class="col-3 ms-2 mt-2 text-body-secondary">
+                        <label for="inputPassword" class="col-form-label">Duration</label>
+                    </div>
+                    <div class="col-3 mt-2">
+                        <input type="number" min="0" max="5" class="form-control" id="Duration_4" placeholder="1">
+                    </div>
+                    <div class="row">
+                    <div class="col-lg-2 col-sm-2 m-2">
+                    <button onclick="addvalue('projects','project_name','company_name','Duration_4')"
+                        class="Add">Add</button>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>project_name</th>
+                            <th>company_name</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_1"></tbody>
+                </table>
+            </div>
+
+                <!-------------------------------------------- CERTIFICATION-------------------------------------- -->
+
+                <div class="row m-2 mt-3">
+                    <h6 class="mt-4 mb-3">Certification</h6>
+                    <div class="col-lg-5 col-sm-12 mt-2">
+                        <input type="text" id="course_name1" class="form-control" placeholder="course_name">
+                    </div>
+                    <div class="col-lg-5 col-sm-12 mt-2">
+                        <input type="text" id="acadamey_name1" class="form-control" placeholder="acadamey name">
+                    </div>
+                    <div class="col-lg-5 col-sm-12 mt-2">
+                        <input type="text" id="year_2" class="form-control" placeholder="year">
+                    </div>
+                    <div class="col-lg-5 col-sm-12 mt-2 mb-2">
+                        <input type="number" id="duration_2" class="form-control" placeholder="Duration">
+                    </div>
+                </div>
+                    <div class="col-lg-1 col-sm-2 ms-3 mb-4">
+                        <button onclick="addvalue('certification','course_name1','acadamey_name1','year_2','duration_2')"
+                            class="Add">Add</button>
+                </div>
+                <table class="table table-striped w-100 ms-2">
+                    <thead>
+                        <tr class="ms-2">
+                            <th>course_name</th>
+                            <th>acadamy_name</th>
+                            <th>year</th>
+                            <th>Duartion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_2">
+                       
+                    </tbody>
+                </table>
+
+            </div>
+
+
+            <!------------------------------------------------ Side Page Starting ------------------------------------------->
+
+            <!------------------------------------------------ PERSONAL DETAILS ------------------------------------------->
+
+
+            <div class="col-lg-6 col-sm-12">
+                <h5 class="mt-2">Personal Details:</h5>
+                <div class="row m-2 mt-3">
+                    <div class="col-4 mt-3 mb-3">
+                        <label for="inputPassword" class="form-label">Father_Name</label>
+                    </div>
+                    <div class="col-8 mt-3 mb-3">
+                        <input type="text" class="form-control" id="father_name" placeholder="Enter Your Father Name"
+                            onkeyup="add(this,'father_name','personal_details')">
+                    </div>
+                </div>
+                <div class="row m-2">
+                    <div class="col-4 mt-2 mb-3">
+                        <label for="inputPassword" class="col-form-label">Mother Name</label>
+                    </div>
+                    <div class="col-8 mt-2 mb-3">
+                        <input type="text" class="form-control" id="mother_name" placeholder="Enter Your Mother Name"
+                            onkeyup="add(this,'mother_name','personal_details')">
+                    </div>
+                </div>
+
+                <div class="row m-2">
+                    <div class="col-4 mt-4">
+                        <label for="inputPassword" class="col-form-label">Date Of Birth</label>
+                    </div>
+                    <div class="col-8 mt-4">
+                        <input type="date" class="form-control" onkeyup="add(this,'dob','personal_details')" id="dob" placeholder="">
+                    </div>
+                </div>
+
+                            <!------------------------------------------------GENDER --------------------------------------------->
+
+            <div class="row m-2">
+                <div class="col-4 mt-4">
+                        <label>Gender</label>
+                </div>
+                <div class="col-8 d-flex mt-4">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Male" id = "male_Gender"
+                            onclick="add(this,'Gender','personal_details')" />
+                        <label class="form-check-label" for="inlineRadio1">Male</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Female" id = "female_Gender"
+                            onclick="add(this,'Gender','personal_details')" />
+                        <label class="form-check-label" for="inlineRadio2">Female</label>
+                    </div>
+               </div>
+            </div>
+
+
+                <div class="row m-2">
+                    <div class="col-4 mt-4">
+                        <label for="inputPassword" class="col-form-label">Address</label>
+                    </div>
+                    <div class="col-8 mt-4">
+                        <textarea class="form-control" id="address" rows="4" placeholder="Enter your Address"
+                            onkeyup="add(this,'address','personal_details')"></textarea>
+                    </div>
+                </div>
+
+                <div class="row m-2">
+                    <div class="col-4 mt-4">
+                        <label for="inputPassword" class="col-form-label">Contact Number</label>
+                    </div>
+                    <div class="col-8 mt-4">
+                        <input type="number" class="form-control" onkeyup="add(this,'contact_number','personal_details')" id="contact_number"
+                            placeholder="Enter your mobile number">
+                    </div>
+                </div>
+
+                <!-------------------------------------------- MARITAL STATUS -------------------------------------------->
+
+                <div class="row m-2">
+                    <div class="col-4 mt-4">
+                        <label for="inputName" class="col-sm-2 col-form-label">Marital status:</label>
+                    </div>
+                    <div class="col-8 mt-4">
+
+                        <select class="form-select" aria-label="Default select example"
+                            onclick="add(this,'Marital status','personal_details')">
+                            <option selected>Status</option>
+                            <option value="UnMarried">UnMarried</option>
+                            <option value="Married">Married</option>
+
+                        </select>
+                        </div>
+                    </div>                   
+                
+                
+                <!----------------------------------------------- WORK EXPERIENCE -------------------------------------------->
+
+                <h5 class="mt-4 mb-3">Work Experience</h5>
+                <div class="row m-3 mt-4 mb-1">
+                    <div class="col-4">
+                        <label for="staticEmail" class="col-form-label">Company Name</label>
+                    </div>
+                    <div class="col-8 mb-3">
+                        <input type="text" class="form-control" id="company_name_4" placeholder="Enter Company name">
+                    </div>
+                </div>
+                <div class="m-3 row">
+                    <div class="col-4 mb-3">
+                        <label for="staticEmail" class="col-form-label">Designation</label>
+                    </div>
+                    <div class="col-8 mb-3">
+                        <input type="text" class="form-control" id="Designation_4" placeholder="Enter Your Designaion">
+                    </div>
+                </div>
+                <div class="m-3 row">
+                    <div class="col-4 mb-3">
+                        <label for="staticEmail" class="col-form-label">Years Of Experience</label>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <input type="number" class="form-control" min="0" max="10" id="yoe_3">
+                    </div>
+                </div>
+                <div class="col-lg-1 col-sm-2 m-4">
+                    <button onclick="addvalue('workExperience','company_name_4','Designation_4','yoe_3')"
+                        class="Add">Add</button>
+                </div>
+                <table class="table table-striped w-100 ms-2">
+                    <thead>
+                        <tr class="ms-2">
+                            <th>course_name</th>
+                            <th>Designaion</th>
+                            <th>year</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_4">
+                       
+                    </tbody>
+                </table>
+
+            </div>
+            <hr>
+
+
+            <!------------------------------------------------------ COLUUMN CLOSED ------------------------------------->
+
+            <!------------------------------------------------ ------EDUCATION ------------------------------------------>
+
+            <div class="row m-2">
+                <h6 class="mt-2 mb-4">Eduction</h6>
+                <p class="text-body-secondary ms-3">Details:</p>
+                <div class="col-lg-3 col-sm-12 mt-2">
+                    <input type="text" id="course_name_1" class="form-control" placeholder="course name">
+                </div>
+                <div class="col-lg-3 col-sm-12 mt-2">
+                    <input type="text" id="institude_name_1" class="form-control" placeholder="institude name">
+                </div>
+                <div class="col-lg-2 col-sm-12 mt-2">
+                    <input type="number" id="year_1" class="form-control" placeholder="year">
+                </div>
+                <div class="col-lg-3 col-sm-12 mt-2 mb-2">
+                    <input type="text" id="place_1" class="form-control" placeholder="Enter the place">
+                </div>
+                <div class="col-lg-1 col-sm-2 mt-2">
+                    <button onclick="addvalue('course','course_name_1','institude_name_1','year_1','place_1')"
+                        class="Add">Add</button>
+                </div>
+                <table class="table table-striped w-100 ms-2">
+                    <thead>
+                        <tr class="ms-2">
+                            <th>course_name</th>
+                            <th>institude_name</th>
+                            <th>year</th>
+                            <th>place</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_3">
+                       
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm-12" id="submit" onclick="updateResume()">
+                <ion-icon name= "save-outline"></ion-icon>Save
+            </button>   
+        </div>
+     </div>
+
+
+     
+       
+
+    <!-----------------------------------------------------Table Create-------------------------------------------------------- -->
+<h1 class="ms-4 mt-3">Table</h1>
+    <table class="table table-striped w-75 mt-3 ms-5">
+        <thead>
+            <tr>
+                <th>S.no</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Objective</th>
+                <th>Contact_number</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="tBody">
+           
+        </tbody>
+    </table>
+
+    <section class="mt-4">
+        <code id="output" style="display: none;" class="fs-4"></code>
+    </section>
+
+    
+</body>
+</html>

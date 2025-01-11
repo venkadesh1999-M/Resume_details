@@ -30,14 +30,15 @@ function addArrayValue(key) {
     let value = document.getElementById(key).value;
     resume[key].push(value);
     document.getElementById(key).value = "";
+    display_output()
     if(key == "Language_known"){
-        update_value(resume.Language_known,"list_1")
+        update_value("Language_known","list_1")
     }
     else if(key == "skills"){
-        update_value(resume.skills,"list_2")
+        update_value("skills","list_2")
     }
     else if(key == "hobbies"){
-        update_value(resume.hobbies,"list_3")
+        update_value("hobbies","list_3")
     }
 }
 
@@ -179,24 +180,64 @@ function Delete_value(){
             window.display= display
             display()
 
-
-            function update_value(list,id){
-                let ul = ""
-                for(let each of list){
-                    ul= ul + `<li>${each}</li>`
+            function update_value(key,id){
+                let li_list = ""
+                for(let each of resume[key]){
+                      li_list = li_list + `<li>${each}<button onclick ='delete_li("${each}","${key}","${id}")'><i class="fa fa-close"></i></button></li>`
                 }
-                document.getElementById(id).innerHTML = ul
+                document.getElementById(id).innerHTML = li_list 
+            } 
+    
+
+            function delete_li(val,key,id){
+                let a = []
+                for(let each of resume[key]){
+                    if(each!=val){
+                        a.push(each)
+                    }
+                }
+                resume[key] = a
+                update_value(key,id)
             }
 
+            window.delete_li = delete_li
+
+
+            function delete_table(index,key){
+                let a =[]
+                let edu = resume[key]
+                for(let i in edu){
+                    if(i!=index){
+                        a.push(edu[i])
+                    }
+                }
+                resume[key] = a
+                if(key == "course"){
+                    update_course()
+                }
+                else if(key == "certification"){
+                    update_certification()
+                }
+                else if(key == "projects"){
+                    update_project()
+                }
+                else if(key == "workExperience"){
+                    update_experience()
+                }
+            }
+
+            window.delete_table = delete_table
 
             function update_course(){
                 let li_list = ""
-                for(let each of resume.course){
+                let course = resume.course
+                for(let i=0;i< course.length;i++){
                         li_list = li_list + `<tr>
-                                    <td>${each.course_name_1}</td>
-                                    <td>${each.institude_name_1}</td>
-                                    <td>${each.year_1}</td>
-                                    <td>${each.place_1}</td>
+                                    <td>${course[i].course_name_1}</td>
+                                    <td>${course[i].institude_name_1}</td>
+                                    <td>${course[i].year_1}</td>
+                                    <td>${course[i].place_1}</td>
+                                    <td><button onclick = 'delete_table("${i}","course")'>Delete</button></td>
                             </tr>`
                 }
                 document.getElementById("tbody_3").innerHTML = li_list
@@ -204,12 +245,14 @@ function Delete_value(){
 
             function update_certification(){
                 let li_list = ""
-                for(let each of resume.certification){
+                let certification  = resume.certification
+                for(let i=0;i<certification.length;i++){
                         li_list = li_list + `<tr>
-                                    <td>${each.course_name1}</td>
-                                    <td>${each.acadamey_name1}</td>
-                                    <td>${each.year_2}</td>
-                                    <td>${each.duration_2}</td>
+                                    <td>${certification[i].course_name1}</td>
+                                    <td>${certification[i].acadamey_name1}</td>
+                                    <td>${certification[i].year_2}</td>
+                                    <td>${certification[i].duration_2}</td>
+                                    <td><button onclick = 'delete_table("${i}","certification")'>Delete</button></td>                              
                             </tr>`
                 }
                 document.getElementById("tbody_2").innerHTML = li_list
@@ -217,11 +260,13 @@ function Delete_value(){
 
             function update_project(){
                 let li_list = ""
-                for(let each of resume.projects){
+                let project = resume.projects
+                for(let i=0;i<project.length;i++){
                         li_list = li_list + `<tr>
-                                    <td>${each.project_name}</td>
-                                    <td>${each.company_name}</td>
-                                    <td>${each.Duration_4}</td>
+                                    <td>${project[i].project_name}</td>
+                                    <td>${project[i].company_name}</td>
+                                    <td>${project[i].Duration_4}</td>
+                                     <td><button onclick = 'delete_table("${i}","projects")'>Delete</button></td>                                                                 
                             </tr>`
                 }
                 document.getElementById("tbody_1").innerHTML = li_list
@@ -229,17 +274,19 @@ function Delete_value(){
 
             function update_experience(){
                 let li_list = ""
-                for(let each of resume.workExperience){
+                let exp =resume.workExperience
+                for(let i=0;i<exp.length;i++){
                         li_list = li_list + `<tr>
-                                    <td>${each.company_name_4}</td>
-                                    <td>${each.Designation_4}</td>
-                                    <td>${each.yoe_3}</td>
+                                    <td>${exp[i].company_name_4}</td>
+                                    <td>${exp[i].Designation_4}</td>
+                                    <td>${exp[i].yoe_3}</td>
+                                    <td><button onclick = 'delete_table("${i}","workExperience")'>Delete</button></td>                                                                                                    
                             </tr>`
                 }
                 document.getElementById("tbody_4").innerHTML = li_list
             }
 
-            // <!-----------------------------------------------------EDIT-------------------------------------------------------- -->
+// <!-----------------------------------------------------EDIT-------------------------------------------------------- -->
 
             function edit(id,dataString){
                 resume.fullname = dataString.fullname;
@@ -248,6 +295,7 @@ function Delete_value(){
                 document.querySelector("#fullname").value = resume.fullname
                 document.querySelector("#email").value = resume.email  
                 document.querySelector("#Objective").value = resume.Objective 
+
                 document.querySelector("#id").value = id     
 
 
@@ -279,32 +327,32 @@ function Delete_value(){
 
                 let language_value = JSON.parse(dataString.Language_known)
                 resume.Language_known = language_value
-                update_value(resume.Language_known,"list_1")
+                update_value("Language_known","list_1")
 
                 let skill_value = JSON.parse(dataString.skills)
                 resume.skills = skill_value
-                update_value(resume.skills,"list_2")
+                update_value("skills","list_2")
 
                 let hobbie_value = JSON.parse(dataString.hobbies)
                 resume.hobbies = hobbie_value
-                update_value(resume.hobbies,"list_3")
+                update_value("hobbies","list_3")
 
 
                 let project_value = JSON.parse(dataString.projects)
                 resume.projects = project_value
-                update_project(resume.projects,"tbody_1")
+                update_project()
 
                 let certification_value = JSON.parse(dataString.certification)
                 resume.certification = certification_value
-                update_certification(resume.certification,"tbody_2")
+                update_certification()
 
                 let course_value = JSON.parse(dataString.course)
                 resume.course = course_value
-                update_course(resume.course,"tbody_3")
+                update_course()
             
                 let workexperience_value = JSON.parse(dataString.workExperience)
                 resume.workExperience = workexperience_value
-                update_experience(resume.workExperience,"tbody_4")
+                update_experience()
 
                
             }
